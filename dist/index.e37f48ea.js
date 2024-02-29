@@ -603,7 +603,7 @@ const controlRecipes = async function() {
         if (!id) return; // guard close
         (0, _recipeViewJsDefault.default).renderSpinner();
         // 0.Update result view to mark selected search result
-        (0, _recipeViewJsDefault.default).update(_modelJs.getSearchResults());
+        (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResults());
         // 1. updating bookmark view
         (0, _bookmarksViewJsDefault.default).update(_modelJs.state.bookmarks);
         // 2. loading the recipe

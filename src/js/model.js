@@ -1,6 +1,7 @@
 import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
 
+// single source of truth
 export const state = {
   recipe: {},
   search: {
