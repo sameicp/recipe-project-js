@@ -2,6 +2,7 @@ import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
 
 // single source of truth
+// state of the application
 export const state = {
   recipe: {},
   search: {
@@ -15,8 +16,8 @@ export const state = {
 
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}${id}`);
-    const { recipe } = data.data;
+    const result = await getJSON(`${API_URL}${id}`);
+    const { recipe } = result.data;
     // nice and dirty way to format the recipe objects
     // so whats the clean and recommended way?
     state.recipe = {
@@ -25,7 +26,7 @@ export const loadRecipe = async function (id) {
       publisher: recipe.publisher,
       sourceUrl: recipe.source_url,
       image: recipe.image_url,
-      servings: recipe.savings,
+      servings: recipe.servings,
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
@@ -40,9 +41,9 @@ export const loadRecipe = async function (id) {
 
 export const loadSearchResults = async function (query) {
   try {
-    const data = await getJSON(`${API_URL}?search=${query}`);
+    const result = await getJSON(`${API_URL}?search=${query}`);
     state.search.query = query;
-    state.search.results = data.data.recipes.map(recipe => {
+    state.search.results = result.data.recipes.map(recipe => {
       return {
         id: recipe.id,
         title: recipe.title,
@@ -61,7 +62,7 @@ export const getSearchResults = function (page = state.search.page) {
   const start = (page - 1) * state.search.resultsPerPage;
   const end = page * state.search.resultsPerPage;
 
-  return state.search.results.slice(start, end);
+  return state.search.results.slice(start, end); // clever trick here!
 };
 
 export const updateServings = function (newServings) {

@@ -658,7 +658,7 @@ const init = function() {
     (0, _bookmarksViewJsDefault.default).addHandlerRender(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerClickButton(controlServings);
-    (0, _recipeViewJsDefault.default).addHandlerBookmark(controlAddBookmark);
+    (0, _recipeViewJsDefault.default).addHandlerAddBookmark(controlAddBookmark);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
 };
@@ -2504,8 +2504,8 @@ const state = {
 };
 const loadRecipe = async function(id) {
     try {
-        const data = await (0, _helpersJs.getJSON)(`${(0, _configJs.API_URL)}${id}`);
-        const { recipe } = data.data;
+        const result = await (0, _helpersJs.getJSON)(`${(0, _configJs.API_URL)}${id}`);
+        const { recipe } = result.data;
         // nice and dirty way to format the recipe objects
         // so whats the clean and recommended way?
         state.recipe = {
@@ -2514,7 +2514,7 @@ const loadRecipe = async function(id) {
             publisher: recipe.publisher,
             sourceUrl: recipe.source_url,
             image: recipe.image_url,
-            servings: recipe.savings,
+            servings: recipe.servings,
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
@@ -2526,9 +2526,9 @@ const loadRecipe = async function(id) {
 };
 const loadSearchResults = async function(query) {
     try {
-        const data = await (0, _helpersJs.getJSON)(`${(0, _configJs.API_URL)}?search=${query}`);
+        const result = await (0, _helpersJs.getJSON)(`${(0, _configJs.API_URL)}?search=${query}`);
         state.search.query = query;
-        state.search.results = data.data.recipes.map((recipe)=>{
+        state.search.results = result.data.recipes.map((recipe)=>{
             return {
                 id: recipe.id,
                 title: recipe.title,
@@ -2545,7 +2545,7 @@ const getSearchResults = function(page = state.search.page) {
     state.search.page = page;
     const start = (page - 1) * state.search.resultsPerPage;
     const end = page * state.search.resultsPerPage;
-    return state.search.results.slice(start, end);
+    return state.search.results.slice(start, end); // clever trick here!
 };
 const updateServings = function(newServings) {
     state.recipe.ingredients.forEach((ing)=>{
@@ -2673,9 +2673,9 @@ class RecipeView extends (0, _viewJsDefault.default) {
             if (+updateTo > 0) handler(+updateTo);
         });
     }
-    addHandlerBookmark(handler) {
+    addHandlerAddBookmark(handler) {
         this._parentEl.addEventListener("click", function(e) {
-            const bookmark = e.target.closest(".btn--bookark");
+            const bookmark = e.target.closest(".btn--bookmark");
             if (!bookmark) return;
             handler();
         });
@@ -2710,7 +2710,7 @@ class RecipeView extends (0, _viewJsDefault.default) {
                   <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
                 </svg>
               </button>
-              <button class="btn--tiny btn--update-servings" data-update-to="${this._data.servings + 1}>
+              <button class="btn--tiny btn--update-servings" data-update-to="${this._data.servings + 1}">
                 <svg>
                   <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
                 </svg>
@@ -2724,7 +2724,7 @@ class RecipeView extends (0, _viewJsDefault.default) {
             </svg>
           </div>
           <button class="btn--round btn--bookmark">
-            <svg class="">
+            <svg>
               <use href="${0, _iconsSvgDefault.default}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
             </svg>
           </button>

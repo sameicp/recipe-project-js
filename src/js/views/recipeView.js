@@ -20,9 +20,9 @@ class RecipeView extends View {
     });
   }
 
-  addHandlerBookmark(handler) {
+  addHandlerAddBookmark(handler) {
     this._parentEl.addEventListener('click', function (e) {
-      const bookmark = e.target.closest('.btn--bookark');
+      const bookmark = e.target.closest('.btn--bookmark');
       if (!bookmark) return;
       handler();
     });
@@ -68,7 +68,7 @@ class RecipeView extends View {
               </button>
               <button class="btn--tiny btn--update-servings" data-update-to="${
                 this._data.servings + 1
-              }>
+              }">
                 <svg>
                   <use href="${icons}#icon-plus-circle"></use>
                 </svg>
@@ -82,7 +82,7 @@ class RecipeView extends View {
             </svg>
           </div>
           <button class="btn--round btn--bookmark">
-            <svg class="">
+            <svg>
               <use href="${icons}#icon-bookmark${
       this._data.bookmarked ? '-fill' : ''
     }"></use>
